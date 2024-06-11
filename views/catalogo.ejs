@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="resources/css/estilo.css">
+    <title>Catalogo Virtual</title>
+</head>
+<body>
+    <div id="Menu">
+        <ol>
+            <a href="/"><li>INICIO</li></a>
+            <a href="#"><li>CATALOGO</li></a>
+            <a href="#"><li>CATEGORIAS</li></a>
+            <% if(!login){ %>
+                <a href="login"><li>INICIAR SESIÓN</li></a>
+            <% }else{ %>
+                <a href="carrito"><li>CARRITO</li></a>
+                <a href="logout"><li>SALIR</li></a>
+            <% } %>
+        </ol>
+    </div>
+    <div id="Contenido">
+        
+        <div id="filtro">
+            <b>FILTRO AVANZADO</b>
+            <form action="filtrar"  method="POST">
+
+                <h2>CATEGORIAS</h2>
+                <br>
+                <input type="checkbox" id="categoria1" name="categoria1" value="Linea Blanca">
+                <label>Linea blanca</label>
+                <br>
+                
+                <input type="checkbox" id="categoria2" name="categoria2" value="Audio">
+                <label>Audio</label>
+                <br>
+                
+                <input type="checkbox" id="categoria3" name="categoria3" value="Video">
+                <label>Video</label>
+                <br>
+                
+                <input type="checkbox" id="categoria4" name="categoria4" value="Hogar">
+                <label>Hogar</label>
+
+                <br>
+                <h2>VALOR</h2>
+                <br>
+                <input type="range" name="precio" min="0" max="3.14" list="markers"/>
+                <br>
+                <label>Minimo:</label>
+                <input type="value" name="precioMin">
+                <br>
+                <br>
+                <label>Maximo:</label>
+                <input type="value" name="precioMax">
+
+                <datalist id="markers">
+                <option value="0"></option>
+                <option value="10000"></option>
+                <option value="1000000"></option>
+                <option value="2000000"></option>
+                <option value="30000000"></option>
+                </datalist>
+                <br>
+                <input type="submit" value="Aplicar filtro" class="BotonFiltro">
+                <a href="/catalogo" class="BotonFiltro">Quitar filtro</a>
+            </form>
+        </div>
+        <div id="busqueda">
+            <form action="buscar"  method="POST">
+                <input type="text" id="categoria" name="categoria">
+                <input type="submit" value="Buscar" class="BotonBuscar">
+            </form>
+        </div>
+        <% for(var i = 0; i<productos.length ; i++){ %>
+            <% var img = productos[i].imagen.toString('base64')%>
+            <div class="item">
+                
+                <form action="addCarrito"  method="POST">
+                    <label></label>
+                    <input type="text" id="referencia" name="id_producto" value="<%= productos[i].nombre %>" readonly>
+                    <br>
+                    <label>Valor:</label>
+                    <input type="text" name="valor" value="$<%= productos[i].valor %>" readonly>
+                    <div class="imgItem">
+                        <img width="150" src="data:image/png;base64,<%=img%>" alt="PRODUCTO">
+                    </div>
+                    <input type="submit" value="AGREGAR" class="agregar">
+                    <!--a class="ver" href="verP" id="<%= productos[i].id_producto %>">VER</a-->
+                </form>
+                <form action="verP" method="POST">
+                    <input type="submit" value="VER" class="ver">
+                    <label>Ref:</label>
+                    <input type="text" name="id_producto" value="<%= productos[i].id_producto %>" readonly>  
+                </form> 
+            </div>
+
+        <% } %>
+    </div>
+    <div id="Lateral">
+        <% if(!login){ %>
+            <img src="resources/imagenes/sesionNoIniciada.png" width="100" alt="ITEM">
+            <h2>Usuario no conectado</h2>
+            <h2><strong>Usuario <%= name %></strong></h2>
+    
+            <% }else{ %>
+            <img src="resources/imagenes/sesionIniciada.png" width="100" alt="ITEM">
+            <h2>Usuario conectado</h2>
+            
+            <h2><strong>Cuenta:<%= id_usuario %></strong></h2>
+            <h2><strong>Usuario <%= name %></strong></h2>
+            <% } %>
+    </div>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <% if(typeof alert != "undefined"){%>
+     <script>
+        swal({
+            title:'<%= alertTitle %>',
+            text:'<%= alertMessage %>',
+            icon:'<%= alertIcon %>',
+            ShowConfirmButton:<%= ShowConfirmButton %>,
+            timer:<%= timer %>
+        }).then(()=>{
+            window.location='/<%= ruta %>'
+        })
+     </script>
+     <% } %>
+</body>
+</html>
